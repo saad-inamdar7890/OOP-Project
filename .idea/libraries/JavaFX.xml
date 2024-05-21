@@ -1,0 +1,25 @@
+<component name="libraryTable">
+  <library name="JavaFX">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../../javafx-sdk-22.0.1/lib" />
+      <root url="file://$PROJECT_DIR$/../../javafx-sdk-22.0.1/lib" />
+    </CLASSES>
+    <JAVADOC />
+    <NATIVE>
+      <root url="file://$PATH_TO_FX$" />
+    </NATIVE>
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../../javafx-sdk-22.0.1" />
+      <root url="file://$PROJECT_DIR$/../../javafx-sdk-22.0.1/src/javafx.base" />
+      <root url="file://$PROJECT_DIR$/../../javafx-sdk-22.0.1/src/javafx.controls" />
+      <root url="file://$PROJECT_DIR$/../../javafx-sdk-22.0.1/src/javafx.fxml" />
+      <root url="file://$PROJECT_DIR$/../../javafx-sdk-22.0.1/src/javafx.graphics" />
+      <root url="file://$PROJECT_DIR$/../../javafx-sdk-22.0.1/src/javafx.media" />
+      <root url="file://$PROJECT_DIR$/../../javafx-sdk-22.0.1/src/javafx.swing" />
+      <root url="file://$PROJECT_DIR$/../../javafx-sdk-22.0.1/src/javafx.web" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/../../javafx-sdk-22.0.1/lib" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/../../javafx-sdk-22.0.1/lib" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/../../javafx-sdk-22.0.1" recursive="false" type="SOURCES" />
+  </library>
+</component>
