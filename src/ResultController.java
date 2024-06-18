@@ -14,6 +14,8 @@ public class ResultController {
 
     @FXML
     private TableColumn<ResultEntry, String> subjectColumn;
+    @FXML
+    private TableColumn<ResultEntry, String> codeColumn;
 
     @FXML
     private TableColumn<ResultEntry, String> gradeColumn;
@@ -28,22 +30,26 @@ public class ResultController {
         }
 
         subjectColumn.setCellValueFactory(cellData -> cellData.getValue().subjectProperty());
+        codeColumn.setCellValueFactory(cellData -> cellData.getValue().codeProperty());
+
         gradeColumn.setCellValueFactory(cellData -> cellData.getValue().gradeProperty());
     }
 
     public void displayResult(String username) {
-        String query = "SELECT result.course_id, result.grade " +
+        String query = "SELECT  course.course_name ,result.course_id, result.grade " +
                 "FROM result " +
-                "INNER JOIN student ON result.student_id = student.student_id " +
-                "WHERE student.student_username = ?";
+                "INNER JOIN student ON result.student_id = student.student_id "+
+                " join course on result.course_id = course.course_id" +
+                " WHERE student.student_username = ?";
         try (PreparedStatement statement = conn.prepareStatement(query)) {
             statement.setString(1, username);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    String subject = resultSet.getString("course_id"); // Assuming course_id contains subject names
-                    String grade = resultSet.getString("grade");
+                    String subject = resultSet.getString("course.course_name");
+                    String code = resultSet.getString("result.course_id"); // Assuming course_id contains subject names
+                    String grade = resultSet.getString("result.grade");
 
-                    ResultEntry entry = new ResultEntry(subject, grade);
+                    ResultEntry entry = new ResultEntry(subject,code, grade);
                     resultTable.getItems().add(entry);
                 }
             }
