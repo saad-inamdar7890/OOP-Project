@@ -4,10 +4,12 @@ import javafx.beans.property.StringProperty;
 public class ResultEntry {
 
     private final StringProperty subject;
+    private final StringProperty code;
     private final StringProperty grade;
 
-    public ResultEntry(String subject, String grade) {
+    public ResultEntry(String subject, String code , String grade) {
         this.subject = new SimpleStringProperty(subject);
+        this.code = new SimpleStringProperty(code);
         this.grade = new SimpleStringProperty(grade);
     }
 
@@ -19,9 +21,27 @@ public class ResultEntry {
         return subject;
     }
 
+
     public void setSubject(String subject) {
         this.subject.set(subject);
     }
+
+
+
+
+    public void setcode(String code) {
+        this.code.set(code);
+    }
+
+
+    public String getcode() {
+        return code.get();
+    }
+
+    public StringProperty codeProperty() {
+        return code;
+    }
+
 
     public String getGrade() {
         return grade.get();
