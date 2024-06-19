@@ -5,6 +5,9 @@ import javafx.scene.control.TableView;
 import java.sql.*;
 
 public class ResultController {
+    @FXML
+    private Label cgpaL;
+
 
     @FXML
     private Label titleLabel;
@@ -21,6 +24,8 @@ public class ResultController {
     private TableColumn<ResultEntry, String> gradeColumn;
 
     private Connection conn;
+    private double cgpa =0;
+    private double credit = 0;
 
     public void initialize() {
         try {
@@ -49,12 +54,43 @@ public class ResultController {
                     String code = resultSet.getString("result.course_id"); // Assuming course_id contains subject names
                     String grade = resultSet.getString("result.grade");
 
+                    cgpa(grade);
+
                     ResultEntry entry = new ResultEntry(subject,code, grade);
                     resultTable.getItems().add(entry);
+
+                    cgpaL.setText(String.format("%.2f", cgpa));
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+
+
+    public void cgpa(String s)
+    {
+
+        if(s.equals("A+"))
+            cgpa = (cgpa +10)/2;
+        else if(s.equals("A"))
+            cgpa = (cgpa +9)/2;
+        else if(s.equals("A-"))
+            cgpa = (cgpa +8)/2;
+        else if(s.equals("B+"))
+            cgpa = (cgpa +7)/2;
+        else if(s.equals("B"))
+            cgpa = (cgpa +6)/2;
+        else if(s.equals("B-"))
+            cgpa = (cgpa +5)/2;
+        else if(s.equals("C+"))
+            cgpa = (cgpa +4)/2;
+        else if(s.equals("C"))
+            cgpa = (cgpa +3)/2;
+        else if(s.equals("C-"))
+            cgpa = (cgpa +2)/2;
+        else if(s.equals("F"))
+            cgpa = (cgpa +1)/2;
     }
 }

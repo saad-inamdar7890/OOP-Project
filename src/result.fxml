@@ -3,15 +3,27 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="vBox" alignment="center" prefHeight="416.0" prefWidth="386.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ResultController">
-    <Label fx:id="titleLabel" text="Student Result" />
-    <TableView fx:id="resultTable" onSort="#initialize">
-        <columns>
-            <TableColumn fx:id="subjectColumn" prefWidth="234.0" text="Subject" />
-         <TableColumn fx:id="codeColumn" minWidth="0.0" prefWidth="85.0" text="Code" />
-            <TableColumn fx:id="gradeColumn" prefWidth="66.0" text="Grade" />
-        </columns>
-    </TableView>
+<VBox fx:id="vBox" alignment="center" prefHeight="439.0" prefWidth="403.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ResultController">
+    <Label fx:id="titleLabel" prefHeight="21.0" prefWidth="372.0" text="Student Result" />
+   <StackPane prefHeight="384.0" prefWidth="403.0">
+      <children>
+          <TableView fx:id="resultTable" onSort="#initialize" prefHeight="142.0" prefWidth="403.0">
+              <columns>
+                  <TableColumn fx:id="subjectColumn" prefWidth="243.0" text="Subject" />
+               <TableColumn fx:id="codeColumn" minWidth="0.0" prefWidth="82.0" text="Code" />
+                  <TableColumn fx:id="gradeColumn" prefWidth="76.0" text="Grade" />
+              </columns>
+          </TableView>
+      </children>
+   </StackPane>
+   <HBox prefHeight="25.0" prefWidth="403.0">
+      <children>
+          <Label fx:id="cgpaLabel" prefHeight="27.0" prefWidth="90.0" text="CGPA: " />
+         <Label fx:id="cgpaL" prefHeight="29.0" prefWidth="102.0" />
+      </children>
+   </HBox>
 </VBox>
