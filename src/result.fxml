@@ -7,15 +7,23 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="vBox" alignment="center" prefHeight="439.0" prefWidth="403.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ResultController">
-    <Label fx:id="titleLabel" prefHeight="21.0" prefWidth="372.0" text="Student Result" />
-   <StackPane prefHeight="384.0" prefWidth="403.0">
+<VBox fx:id="vBox" alignment="center" prefHeight="447.0" prefWidth="535.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ResultController">
+   <HBox prefHeight="27.0" prefWidth="535.0">
+      <children>
+          <Label fx:id="titleLabel" prefHeight="31.0" prefWidth="46.0" text="Name :" />
+         <Label fx:id="nameLabel" prefHeight="27.0" prefWidth="215.0" text=".." />
+         <Label prefHeight="27.0" prefWidth="83.0" text="Roll. No. :" />
+         <Label fx:id="IdLabel" prefHeight="27.0" prefWidth="176.0" text=".." />
+      </children>
+   </HBox>
+   <StackPane prefHeight="378.0" prefWidth="537.0">
       <children>
           <TableView fx:id="resultTable" onSort="#initialize" prefHeight="142.0" prefWidth="403.0">
               <columns>
-                  <TableColumn fx:id="subjectColumn" prefWidth="243.0" text="Subject" />
-               <TableColumn fx:id="codeColumn" minWidth="0.0" prefWidth="82.0" text="Code" />
-                  <TableColumn fx:id="gradeColumn" prefWidth="76.0" text="Grade" />
+                  <TableColumn fx:id="subjectColumn" prefWidth="242.0" text="Subject" />
+               <TableColumn fx:id="codeColumn" minWidth="0.0" prefWidth="93.0" text="Code" />
+               <TableColumn fx:id="creditColumn" prefWidth="106.0" text="Credit" />
+                  <TableColumn fx:id="gradeColumn" prefWidth="93.0" text="Grade" />
               </columns>
           </TableView>
       </children>

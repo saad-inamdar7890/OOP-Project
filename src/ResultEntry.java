@@ -7,10 +7,15 @@ public class ResultEntry {
     private final StringProperty code;
     private final StringProperty grade;
 
-    public ResultEntry(String subject, String code , String grade) {
+    private final StringProperty credit;
+
+
+    public ResultEntry(String subject, String code , String credit , String grade) {
         this.subject = new SimpleStringProperty(subject);
         this.code = new SimpleStringProperty(code);
         this.grade = new SimpleStringProperty(grade);
+        this.credit = new SimpleStringProperty(credit);
+
     }
 
     public String getSubject() {
@@ -41,6 +46,23 @@ public class ResultEntry {
     public StringProperty codeProperty() {
         return code;
     }
+
+
+
+    public String getCredit() {
+        return credit.get();
+    }
+
+    public StringProperty creditProperty() {
+        return credit;
+    }
+
+
+    public void setCredit(String credit) {
+        this.credit.set(credit);
+    }
+
+
 
 
     public String getGrade() {
