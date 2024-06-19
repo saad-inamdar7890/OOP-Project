@@ -30,8 +30,9 @@
    </StackPane>
    <HBox prefHeight="25.0" prefWidth="403.0">
       <children>
-          <Label fx:id="cgpaLabel" prefHeight="27.0" prefWidth="90.0" text="CGPA: " />
-         <Label fx:id="cgpaL" prefHeight="29.0" prefWidth="102.0" />
+          <Label fx:id="cgpaLabel" prefHeight="32.0" prefWidth="39.0" text="CGPA: " />
+         <Label fx:id="cgpaL" prefHeight="25.0" prefWidth="34.0" />
+         <Label prefHeight="35.0" prefWidth="31.0" text="/ 10" />
       </children>
    </HBox>
 </VBox>
