@@ -14,6 +14,11 @@ import java.sql.SQLException;
 
 public class CourseSelectionController {
 
+
+    @FXML
+    private ComboBox<String> GradingMode;
+
+
     @FXML
     private ComboBox<String> courseComboBox;
 
@@ -34,18 +39,21 @@ public class CourseSelectionController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        GradingMode.getItems().addAll("Absolute Grading", "Relative Grading", "Manually Grading");
     }
 
     private void loadCourses() {
-        String query = "SELECT course_id FROM course WHERE professor_id = ?";
+        String query = "SELECT course_id , course_name FROM course WHERE professor_id = ?";
         ObservableList<String> courses = FXCollections.observableArrayList();
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, professorId);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    String courseName = resultSet.getString("course_id");
+                    String courseName = resultSet.getString("course_name");
+                    String courseId = resultSet.getString("course_id");
                     System.out.println("Course Name: " + courseName); // Debug output
-                    courses.add(courseName);
+                    courses.add(courseId+"--"+courseName);
                 }
                 courseComboBox.setItems(courses);
             }
@@ -57,6 +65,7 @@ public class CourseSelectionController {
 
     public void selectCourse() {
         String selectedCourse = courseComboBox.getValue();
+        String gradingMode = GradingMode.getValue();
         if (selectedCourse == null) {
             showAlert(Alert.AlertType.ERROR, "ERROR MESSAGE", null, "Please select a course");
             return;
@@ -79,4 +88,7 @@ public class CourseSelectionController {
         alert.setContentText(content);
         alert.showAndWait();
     }
+
+
+
 }

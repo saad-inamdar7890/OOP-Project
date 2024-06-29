@@ -31,7 +31,7 @@ public class GradingController {
     }
 
     public void setCourseId(String courseId) {
-        this.courseId = courseId;
+        this.courseId = courseId.substring(0,4);
         loadStudents();
     }
 
@@ -102,14 +102,14 @@ public class GradingController {
 
     private void saveGrades() {
         String updateQuery = "UPDATE result SET marks = ?, grade = ? WHERE student_id = ? AND course_id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(updateQuery)) {
-            for (StudentEntry entry : gradingTable.getItems()) {
-                statement.setString(1, entry.getMarks());
-                statement.setString(2, entry.getGrade());
-                statement.setString(3, entry.getStudentId());
-                statement.setString(4, courseId);
-                statement.addBatch();
-            }
+                try (PreparedStatement statement = connection.prepareStatement(updateQuery)) {
+                    for (StudentEntry entry : gradingTable.getItems()) {
+                        statement.setString(1, entry.getMarks());
+                        statement.setString(2, entry.getGrade());
+                        statement.setString(3, entry.getStudentId());
+                        statement.setString(4, courseId);
+                        statement.addBatch();
+                     }
             statement.executeBatch();
             showAlert(Alert.AlertType.INFORMATION, "SUCCESS", null, "Marks and grades saved successfully");
         } catch (SQLException e) {
@@ -124,5 +124,45 @@ public class GradingController {
         alert.setHeaderText(header);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+
+    private  String AbsoluteGrading(int fail, int marks) {
+        int range = 100 - fail;
+        double block = range / 9.0; // Use double division to get accurate results
+        int blockNumber = (int) ((marks - fail) / block);
+
+        switch (blockNumber) {
+            case 0: return "C-";
+            case 1: return "C";
+            case 2: return "C+";
+            case 3: return "B-";
+            case 4: return "B";
+            case 5: return "B+";
+            case 6: return "A-";
+            case 7: return "A";
+            case 8, 9: return "A+";
+            default: return "F"; // If marks are below the fail threshold
+        }
+    }
+
+
+    private  String RrelativeGrading(int fail, int marks , int max) {
+        int range = max - fail;
+        double block = range / 9.0; // Use double division to get accurate results
+        int blockNumber = (int) ((marks - fail) / block);
+
+        switch (blockNumber) {
+            case 0: return "C-";
+            case 1: return "C";
+            case 2: return "C+";
+            case 3: return "B-";
+            case 4: return "B";
+            case 5: return "B+";
+            case 6: return "A-";
+            case 7: return "A";
+            case 8, 9: return "A+";
+            default: return "F"; // If marks are below the fail threshold
+        }
     }
 }
