@@ -1,13 +1,17 @@
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -15,24 +19,31 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class GradingController {
-
+    private Stage stage;
     private TableView<StudentEntry> gradingTable;
     private TableColumn<StudentEntry, String> studentIdColumn;
     private TableColumn<StudentEntry, String> marksColumn;
     private TableColumn<StudentEntry, String> gradeColumn;
     private TableColumn<StudentEntry, String> studentNameColumn;
     private Button saveButton;
+    private Button backButton;
 
     private Connection connection;
     private String courseId;
+    private int fail;
 
     public GradingController() {
         initialize();
     }
 
-    public void setCourseId(String courseId) {
+    public void setCourseId(String courseId , String gradingMode , int fail) {
         this.courseId = courseId.substring(0,4);
+        this.fail = fail;
         loadStudents();
+        if(gradingMode.equals("Absolute Grading"))
+            AbsoluteGrading(this.fail);
+        else if(gradingMode.equals("Relative Grading"))
+            RelativeGrading(this.fail);
     }
 
     private void initialize() {
@@ -67,6 +78,15 @@ public class GradingController {
 
         saveButton = new Button("Save Grades");
         saveButton.setOnAction(e -> saveGrades());
+
+        backButton = new Button("back");
+        backButton.setOnAction(e -> {
+            try {
+                back(e);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
     }
 
     private void loadStudents() {
@@ -93,7 +113,7 @@ public class GradingController {
 
     public void showGradingWindow() {
         Stage gradingStage = new Stage();
-        VBox root = new VBox(10, gradingTable, saveButton);
+        VBox root = new VBox(10, gradingTable, saveButton , backButton);
         Scene scene = new Scene(root, 600, 400);
         gradingStage.setScene(scene);
         gradingStage.setTitle("Grading Window");
@@ -127,42 +147,72 @@ public class GradingController {
     }
 
 
-    private  String AbsoluteGrading(int fail, int marks) {
+    private  void AbsoluteGrading (int fail) {
         int range = 100 - fail;
         double block = range / 9.0; // Use double division to get accurate results
-        int blockNumber = (int) ((marks - fail) / block);
 
-        switch (blockNumber) {
-            case 0: return "C-";
-            case 1: return "C";
-            case 2: return "C+";
-            case 3: return "B-";
-            case 4: return "B";
-            case 5: return "B+";
-            case 6: return "A-";
-            case 7: return "A";
-            case 8, 9: return "A+";
-            default: return "F"; // If marks are below the fail threshold
+        for (StudentEntry entry : gradingTable.getItems()) {
+                int marks = Integer.parseInt(entry.getMarks());
+                int blockNumber = (int) ((marks - fail) / block);
+                String grade = "";
+                switch (blockNumber) {
+                    case 0:  grade = "C-"; break;
+                    case 1:  grade = "C";break;
+                    case 2:  grade ="C+";break;
+                    case 3: grade = "B-";break;
+                    case 4:  grade = "B";break;
+                    case 5:  grade = "B+";break;
+                    case 6:  grade = "A-";break;
+                    case 7:  grade = "A";break;
+                    case 8, 9:  grade = "A+";break;
+                    default:  grade = "F"; // If marks are below the fail threshold
+                }
+                entry.setGrade(grade);
         }
+
+
     }
 
 
-    private  String RrelativeGrading(int fail, int marks , int max) {
+    private  void  RelativeGrading(int fail) {
+        int max = 0;
+        for (StudentEntry entry : gradingTable.getItems()) {
+            int n = Integer.parseInt(entry.getMarks());
+            if(n > max)
+                max = n;
+        }
         int range = max - fail;
         double block = range / 9.0; // Use double division to get accurate results
-        int blockNumber = (int) ((marks - fail) / block);
-
-        switch (blockNumber) {
-            case 0: return "C-";
-            case 1: return "C";
-            case 2: return "C+";
-            case 3: return "B-";
-            case 4: return "B";
-            case 5: return "B+";
-            case 6: return "A-";
-            case 7: return "A";
-            case 8, 9: return "A+";
-            default: return "F"; // If marks are below the fail threshold
+        for (StudentEntry entry : gradingTable.getItems()) {
+            int marks = Integer.parseInt(entry.getMarks());
+            int blockNumber = (int) ((marks - fail) / block);
+            String grade = "";
+            switch (blockNumber) {
+                case 0:  grade = "C-"; break;
+                case 1:  grade = "C";break;
+                case 2:  grade ="C+";break;
+                case 3: grade = "B-";break;
+                case 4:  grade = "B";break;
+                case 5:  grade = "B+";break;
+                case 6:  grade = "A-";break;
+                case 7:  grade = "A";break;
+                case 8, 9:  grade = "A+";break;
+                default:  grade = "F"; // If marks are below the fail threshold
+            }
+            entry.setGrade(grade);
         }
     }
+
+    public void back(ActionEvent event) throws IOException {
+        switchScene(event, "course_selection.fxml");
+    }
+
+    private void switchScene(javafx.event.ActionEvent event, String fxmlFile) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource(fxmlFile));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
 }

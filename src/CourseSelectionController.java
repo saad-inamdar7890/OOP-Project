@@ -1,11 +1,14 @@
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -14,7 +17,8 @@ import java.sql.SQLException;
 
 public class CourseSelectionController {
 
-
+    @FXML
+    private TextField failMarks;
     @FXML
     private ComboBox<String> GradingMode;
 
@@ -24,6 +28,8 @@ public class CourseSelectionController {
 
     @FXML
     private Button selectButton;
+    @FXML
+    private Label Proffessor_name;
 
     private Connection connection;
     private String professorId;
@@ -31,6 +37,7 @@ public class CourseSelectionController {
     public void setProfessorId(String professorId) {
         this.professorId = professorId;
         loadCourses();
+        professorNmae();;
     }
 
     public void initialize() {
@@ -41,6 +48,24 @@ public class CourseSelectionController {
         }
 
         GradingMode.getItems().addAll("Absolute Grading", "Relative Grading", "Manually Grading");
+
+    }
+    private void professorNmae() {
+        String query = "SELECT professor_name FROM professors WHERE professor_id = ?";
+        ObservableList<String> courses = FXCollections.observableArrayList();
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, professorId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                String professorName = "";
+                while (resultSet.next()) {
+                   professorName = resultSet.getString("professor_name");
+                }
+                Proffessor_name.setText(professorName);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "ERROR MESSAGE", null, "Error loading courses");
+        }
     }
 
     private void loadCourses() {
@@ -66,6 +91,7 @@ public class CourseSelectionController {
     public void selectCourse() {
         String selectedCourse = courseComboBox.getValue();
         String gradingMode = GradingMode.getValue();
+        int failMark = Integer.parseInt(failMarks.getText());
         if (selectedCourse == null) {
             showAlert(Alert.AlertType.ERROR, "ERROR MESSAGE", null, "Please select a course");
             return;
@@ -73,7 +99,7 @@ public class CourseSelectionController {
 
         // Create and open the grading window programmatically
         GradingController gradingController = new GradingController();
-        gradingController.setCourseId(selectedCourse);
+        gradingController.setCourseId(selectedCourse , gradingMode , failMark);
         gradingController.showGradingWindow();
 
         // Close the current stage
