@@ -117,7 +117,7 @@ public class CourseSelectionController {
            root = loader.load();
 
             GradingController gradingController = loader.getController();
-            gradingController.setCourseId(selectedCourse, gradingMode, failMark);
+            gradingController.setCourseId(selectedCourse, gradingMode, failMark , professorId);
 
             stage = (Stage) selectButton.getScene().getWindow();
             scene = new Scene(root);

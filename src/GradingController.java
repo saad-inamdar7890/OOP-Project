@@ -3,6 +3,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
@@ -41,6 +43,7 @@ public class GradingController {
     private Connection connection;
     private String courseId;
     private int fail;
+    private String professorId;
 
     @FXML
     private void initialize() {
@@ -65,10 +68,11 @@ public class GradingController {
 
     }
 
-    public void setCourseId(String courseId, String gradingMode, int fail) {
+    public void setCourseId(String courseId, String gradingMode, int fail , String professorId) {
         this.courseId = courseId.substring(0, 4);
         this.fail = fail;
         this.gradingMode = gradingMode;
+        this.professorId = professorId;
         loadStudents();
 
 
@@ -285,14 +289,32 @@ public class GradingController {
 
     @FXML
     private void back(ActionEvent event) throws IOException {
-        switchScene(event, "course_selection.fxml");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("course_selection.fxml"));
+        Parent root = loader.load();
+
+        // Get the controller and pass the username
+        CourseSelectionController courseSelectionController = loader.getController();
+
+        courseSelectionController.setProfessorId(professorId);
+
+
+        stage = (Stage) ((Node) saveButton).getScene().getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+//        switchScene(event, "course_selection.fxml");
     }
 
     private void switchScene(ActionEvent event, String fxmlFile) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.close(); // Close current stage
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+
+        CourseSelectionController courseSelectionController = loader.getController();
+        courseSelectionController.setProfessorId(professorId);
         Stage primaryStage = new Stage();
+
+
         primaryStage.setScene(new Scene(loader.load()));
         primaryStage.show();
     }
