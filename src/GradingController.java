@@ -48,6 +48,10 @@ public class GradingController {
     private ComboBox<String> GradingMode;
     @FXML
     private TextField FailMarks;
+    @FXML
+    private TextField zScoreZeroGrade;
+    @FXML
+    private ToolBar baseGradeCont;
 
 
     @FXML
@@ -68,10 +72,13 @@ public class GradingController {
         // Enable editing for marks and grade columns
         marksColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         gradeColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        gradingTable.setEditable(true);
 
         // Load students into the table
-        GradingMode.getItems().addAll("Absolute Grading", "Relative Grading", "Manually Grading");
-
+        GradingMode.getItems().addAll("Absolute Grading", "Relative Grading","Normalised Grading", "Manually Grading");
+        zScoreZeroGrade.setText("B+");
+        baseGradeCont.setVisible(false);
+        GradingMode.setOnAction(event -> gradingModeChanged());
     }
 
     public void setCourseId(String courseId, String gradingMode, int fail , String professorId) {
@@ -83,7 +90,6 @@ public class GradingController {
         FailMarks.setText(String.valueOf(fail));
 
         loadStudents();
-
 
     }
 
@@ -106,10 +112,9 @@ public class GradingController {
                 // Perform grading based on mode
                 fail = Integer.parseInt(FailMarks.getText());
                 gradingMode = GradingMode.getValue();
-                if (gradingMode.equals("Absolute Grading"))
-                    absoluteGrading();
-                else if (gradingMode.equals("Relative Grading"))
-                    relativeGrading();
+
+                gradingModeChanged();
+
                 populateGradeBarChart();
                 populateMarksLineChart();
 
@@ -118,6 +123,24 @@ public class GradingController {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    private void gradingModeChanged() {
+        if (gradingMode.equals("Absolute Grading"))
+            absoluteGrading();
+        else if (gradingMode.equals("Relative Grading"))
+            relativeGrading();
+        else if (gradingMode.equals("Normalised Grading")) {
+            normalizedGrading();
+        }
+
+        if (gradingMode.equals("Normalised Grading")) {
+            baseGradeCont.setVisible(true);
+        } else {
+            baseGradeCont.setVisible(false);
+        }
+    }
+
 
     private void absoluteGrading() {
         int range = 100 - fail;
@@ -172,6 +195,56 @@ public class GradingController {
             entry.setGrade(grade);
         }
     }
+
+    private void normalizedGrading() {
+        // Get user inputs
+       String zeroGrade = zScoreZeroGrade.getText();
+
+
+        // Calculate mean
+        double sum = gradingTable.getItems().stream()
+                .mapToInt(entry -> Integer.parseInt(entry.getMarks()))
+                .sum();
+        double mean = sum / gradingTable.getItems().size();
+
+        // Calculate standard deviation
+        double variance = gradingTable.getItems().stream()
+                .mapToDouble(entry -> Math.pow(Integer.parseInt(entry.getMarks()) - mean, 2))
+                .sum() / gradingTable.getItems().size();
+        double standardDeviation = Math.sqrt(variance);
+
+        // Determine grade segments based on base grade
+        String[] grades = {"A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "F"};
+        int baseIndex = Arrays.asList(grades).indexOf(zeroGrade);
+
+        if (baseIndex == -1) {
+            showAlert(Alert.AlertType.ERROR, "ERROR", null, "Invalid base grade");
+            return;
+        }
+
+        for (StudentEntry entry : gradingTable.getItems()) {
+            int marks = Integer.parseInt(entry.getMarks());
+            double zScore = (marks - mean) / standardDeviation;
+            String grade;
+
+            int gradeIndex = baseIndex + (int) Math.round(zScore / 0.5);
+            if (gradeIndex < 0) {
+                grade = "C-";
+            } else if (gradeIndex >= grades.length) {
+                grade = grades[grades.length - 2];
+            } else {
+                grade = grades[grades.length - 1 - gradeIndex];
+            }
+
+            // If marks are less than fail, set grade to F
+            if (marks < fail) {
+                grade = "F";
+            }
+
+            entry.setGrade(grade);
+        }
+    }
+
 
     @FXML
     private void saveGrades() {

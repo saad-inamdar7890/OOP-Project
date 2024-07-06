@@ -52,7 +52,7 @@ public class CourseSelectionController {
             showAlert(Alert.AlertType.ERROR, "Database Connection Error", null, "Failed to connect to the database.");
         }
 
-        GradingMode.getItems().addAll("Absolute Grading", "Relative Grading", "Manually Grading");
+        GradingMode.getItems().addAll("Absolute Grading", "Relative Grading","Normalised Grading", "Manually Grading");
     }
 
     private void professorName() {
