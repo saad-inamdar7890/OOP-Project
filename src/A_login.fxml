@@ -12,8 +12,8 @@
    <children>
       <Text layoutX="89.0" layoutY="205.0" scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username :" textAlignment="CENTER" />
       <Text layoutX="92.0" layoutY="272.0" scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password :" />
-      <TextField fx:id="Username" layoutX="226.0" layoutY="188.0" />
-      <TextField fx:id="password" layoutX="226.0" layoutY="255.0" />
+      <TextField fx:id="Username" layoutX="226.0" layoutY="188.0" text="ankit" />
+      <TextField fx:id="password" layoutX="226.0" layoutY="255.0" text="ankit" />
       <Button fx:id="login_btn" layoutX="123.0" layoutY="318.0" mnemonicParsing="false" onAction="#A_login" prefHeight="25.0" prefWidth="112.0" text="Login" textAlignment="CENTER" />
       <Button layoutX="287.0" layoutY="318.0" mnemonicParsing="false" onAction="#close" prefHeight="25.0" prefWidth="99.0" text="Cancel" />
       <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">

@@ -6,13 +6,14 @@
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="475.0" prefWidth="722.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="475.0" prefWidth="722.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GradingController">
    <children>
       <StackPane layoutY="-1.0" prefHeight="475.0" prefWidth="722.0">
          <children>
@@ -20,29 +21,33 @@
                <children>
                   <VBox layoutX="-1.0" prefHeight="475.0" prefWidth="418.0">
                      <children>
-                        <TableView prefHeight="449.0" prefWidth="418.0">
+                        <TableView fx:id="gradingTable" prefHeight="449.0" prefWidth="418.0">
                           <columns>
-                            <TableColumn prefWidth="193.0" text="Student Name" />
-                            <TableColumn prefWidth="122.0" text="Marks" />
-                              <TableColumn prefWidth="102.0" text="Grade" />
+                            <TableColumn fx:id="studentNameColumn" prefWidth="118.0" text="Student Name" />
+                              <TableColumn fx:id="studentIdColumn" prefWidth="67.0" text="I.D." />
+                            <TableColumn fx:id="marksColumn" prefWidth="129.0" text="Marks" />
+                              <TableColumn fx:id="gradeColumn" prefWidth="103.0" text="Grade" />
                           </columns>
                         </TableView>
                         <ButtonBar prefHeight="52.0" prefWidth="418.0">
                           <buttons>
-                            <Button mnemonicParsing="false" text="Save" />
+                            <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveGrades" text="Save" />
+                              <Button fx:id="refreshBtn" mnemonicParsing="false" onAction="#refresh" text="Refresh" />
+                              <Button fx:id="backButton" mnemonicParsing="false" onAction="#back" text="Back" />
+                              <ComboBox fx:id="GradingMode" prefWidth="150.0" promptText="Grading Mode" />
                           </buttons>
                         </ButtonBar>
                      </children>
                   </VBox>
-                  <LineChart layoutX="417.0" layoutY="2.0" prefHeight="202.0" prefWidth="304.0">
+                  <LineChart fx:id="marksLineChart" layoutX="417.0" layoutY="2.0" prefHeight="202.0" prefWidth="304.0">
                     <xAxis>
-                      <CategoryAxis side="BOTTOM" />
+                      <NumberAxis label="Marks" side="BOTTOM" />
                     </xAxis>
                     <yAxis>
-                      <NumberAxis side="LEFT" />
+                      <NumberAxis label="Percentile" side="LEFT" />
                     </yAxis>
                   </LineChart>
-                  <BarChart layoutX="417.0" layoutY="                   243.0" prefHeight="202.0" prefWidth="304.0">
+                  <BarChart fx:id="gradeBarChart" layoutX="417.0" layoutY="                   243.0" prefHeight="202.0" prefWidth="304.0">
                     <xAxis>
                       <CategoryAxis side="BOTTOM" />
                     </xAxis>

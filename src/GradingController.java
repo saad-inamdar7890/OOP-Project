@@ -1,92 +1,77 @@
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.*;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class GradingController {
     private Stage stage;
+    @FXML
     private TableView<StudentEntry> gradingTable;
+    @FXML
     private TableColumn<StudentEntry, String> studentIdColumn;
+    @FXML
     private TableColumn<StudentEntry, String> marksColumn;
+    @FXML
     private TableColumn<StudentEntry, String> gradeColumn;
+    @FXML
     private TableColumn<StudentEntry, String> studentNameColumn;
+    @FXML
     private Button saveButton;
+    @FXML
     private Button backButton;
-
+    private String gradingMode;
     private Connection connection;
     private String courseId;
     private int fail;
 
-    public GradingController() {
-        initialize();
-    }
-
-    public void setCourseId(String courseId , String gradingMode , int fail) {
-        this.courseId = courseId.substring(0,4);
-        this.fail = fail;
-        loadStudents();
-        if(gradingMode.equals("Absolute Grading"))
-            AbsoluteGrading(this.fail);
-        else if(gradingMode.equals("Relative Grading"))
-            RelativeGrading(this.fail);
-    }
-
+    @FXML
     private void initialize() {
+        // Initialize database connection
         try {
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/school", "root", "618K@PV4saad");
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        gradingTable = new TableView<>();
-
-        // Define and configure the student name column
-        studentNameColumn = new TableColumn<>("Student Name");
+        // Initialize table columns
         studentNameColumn.setCellValueFactory(new PropertyValueFactory<>("studentName"));
-
-        // Define and configure the student ID column
-        studentIdColumn = new TableColumn<>("Student ID");
         studentIdColumn.setCellValueFactory(new PropertyValueFactory<>("studentId"));
-
-        // Define and configure the marks column
-        marksColumn = new TableColumn<>("Marks");
         marksColumn.setCellValueFactory(new PropertyValueFactory<>("marks"));
-        marksColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-
-        // Define and configure the grade column
-        gradeColumn = new TableColumn<>("Grade");
         gradeColumn.setCellValueFactory(new PropertyValueFactory<>("grade"));
+
+        // Enable editing for marks and grade columns
+        marksColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         gradeColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 
-        gradingTable.getColumns().addAll(studentNameColumn, studentIdColumn, marksColumn, gradeColumn);
-        gradingTable.setEditable(true);
+        // Load students into the table
 
-        saveButton = new Button("Save Grades");
-        saveButton.setOnAction(e -> saveGrades());
+    }
 
-        backButton = new Button("back");
-        backButton.setOnAction(e -> {
-            try {
-                back(e);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
+    public void setCourseId(String courseId, String gradingMode, int fail) {
+        this.courseId = courseId.substring(0, 4);
+        this.fail = fail;
+        this.gradingMode = gradingMode;
+        loadStudents();
+
+
     }
 
     private void loadStudents() {
@@ -103,33 +88,87 @@ public class GradingController {
                     String marks = resultSet.getString("marks");
                     String grade = resultSet.getString("grade");
                     students.add(new StudentEntry(studentId, studentName, marks, grade));
+                    gradingTable.setItems(students);
                 }
-                gradingTable.setItems(students);
+                // Perform grading based on mode
+                if (gradingMode.equals("Absolute Grading"))
+                    absoluteGrading();
+                else if (gradingMode.equals("Relative Grading"))
+                    relativeGrading();
+                populateGradeBarChart();
+                populateMarksLineChart();
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void showGradingWindow() {
-        Stage gradingStage = new Stage();
-        VBox root = new VBox(10, gradingTable, saveButton , backButton);
-        Scene scene = new Scene(root, 600, 400);
-        gradingStage.setScene(scene);
-        gradingStage.setTitle("Grading Window");
-        gradingStage.show();
+    private void absoluteGrading() {
+        int range = 100 - fail;
+        double block = range / 9.0;
+
+        for (StudentEntry entry : gradingTable.getItems()) {
+            int marks = Integer.parseInt(entry.getMarks());
+            int blockNumber = (int) ((marks - fail) / block);
+            String grade;
+            switch (blockNumber) {
+                case 0:  grade = "C-"; break;
+                case 1:  grade = "C"; break;
+                case 2:  grade = "C+"; break;
+                case 3:  grade = "B-"; break;
+                case 4:  grade = "B"; break;
+                case 5:  grade = "B+"; break;
+                case 6:  grade = "A-"; break;
+                case 7:  grade = "A"; break;
+                case 8:
+                case 9:  grade = "A+"; break;
+                default: grade = "F";
+            }
+            entry.setGrade(grade);
+        }
     }
 
+    private void relativeGrading() {
+        int max = gradingTable.getItems().stream()
+                .mapToInt(entry -> Integer.parseInt(entry.getMarks()))
+                .max().orElse(0);
+
+        int range = max - fail;
+        double block = range / 9.0;
+
+        for (StudentEntry entry : gradingTable.getItems()) {
+            int marks = Integer.parseInt(entry.getMarks());
+            int blockNumber = (int) ((marks - fail) / block);
+            String grade;
+            switch (blockNumber) {
+                case 0:  grade = "C-"; break;
+                case 1:  grade = "C"; break;
+                case 2:  grade = "C+"; break;
+                case 3:  grade = "B-"; break;
+                case 4:  grade = "B"; break;
+                case 5:  grade = "B+"; break;
+                case 6:  grade = "A-"; break;
+                case 7:  grade = "A"; break;
+                case 8:
+                case 9:  grade = "A+"; break;
+                default: grade = "F";
+            }
+            entry.setGrade(grade);
+        }
+    }
+
+    @FXML
     private void saveGrades() {
         String updateQuery = "UPDATE result SET marks = ?, grade = ? WHERE student_id = ? AND course_id = ?";
-                try (PreparedStatement statement = connection.prepareStatement(updateQuery)) {
-                    for (StudentEntry entry : gradingTable.getItems()) {
-                        statement.setString(1, entry.getMarks());
-                        statement.setString(2, entry.getGrade());
-                        statement.setString(3, entry.getStudentId());
-                        statement.setString(4, courseId);
-                        statement.addBatch();
-                     }
+        try (PreparedStatement statement = connection.prepareStatement(updateQuery)) {
+            for (StudentEntry entry : gradingTable.getItems()) {
+                statement.setString(1, entry.getMarks());
+                statement.setString(2, entry.getGrade());
+                statement.setString(3, entry.getStudentId());
+                statement.setString(4, courseId);
+                statement.addBatch();
+            }
             statement.executeBatch();
             showAlert(Alert.AlertType.INFORMATION, "SUCCESS", null, "Marks and grades saved successfully");
         } catch (SQLException e) {
@@ -147,72 +186,121 @@ public class GradingController {
     }
 
 
-    private  void AbsoluteGrading (int fail) {
-        int range = 100 - fail;
-        double block = range / 9.0; // Use double division to get accurate results
+    @FXML
+    private BarChart<String, Number> gradeBarChart;
 
+    // Method to populate bar chart with grade distribution
+    private void populateGradeBarChart() {
+        // Count students for each grade
+        Map<String, Integer> gradeCountMap = new HashMap<>();
+        gradeCountMap.put("A+", 0);
+        gradeCountMap.put("A", 0);
+        gradeCountMap.put("A-", 0);
+        gradeCountMap.put("B+", 0);
+        gradeCountMap.put("B", 0);
+        gradeCountMap.put("B-", 0);
+        gradeCountMap.put("C+", 0);
+        gradeCountMap.put("C", 0);
+        gradeCountMap.put("C-", 0);
+        gradeCountMap.put("F", 0);
+
+        // Count grades from student entries
         for (StudentEntry entry : gradingTable.getItems()) {
-                int marks = Integer.parseInt(entry.getMarks());
-                int blockNumber = (int) ((marks - fail) / block);
-                String grade = "";
-                switch (blockNumber) {
-                    case 0:  grade = "C-"; break;
-                    case 1:  grade = "C";break;
-                    case 2:  grade ="C+";break;
-                    case 3: grade = "B-";break;
-                    case 4:  grade = "B";break;
-                    case 5:  grade = "B+";break;
-                    case 6:  grade = "A-";break;
-                    case 7:  grade = "A";break;
-                    case 8, 9:  grade = "A+";break;
-                    default:  grade = "F"; // If marks are below the fail threshold
-                }
-                entry.setGrade(grade);
-        }
-
-
-    }
-
-
-    private  void  RelativeGrading(int fail) {
-        int max = 0;
-        for (StudentEntry entry : gradingTable.getItems()) {
-            int n = Integer.parseInt(entry.getMarks());
-            if(n > max)
-                max = n;
-        }
-        int range = max - fail;
-        double block = range / 9.0; // Use double division to get accurate results
-        for (StudentEntry entry : gradingTable.getItems()) {
-            int marks = Integer.parseInt(entry.getMarks());
-            int blockNumber = (int) ((marks - fail) / block);
-            String grade = "";
-            switch (blockNumber) {
-                case 0:  grade = "C-"; break;
-                case 1:  grade = "C";break;
-                case 2:  grade ="C+";break;
-                case 3: grade = "B-";break;
-                case 4:  grade = "B";break;
-                case 5:  grade = "B+";break;
-                case 6:  grade = "A-";break;
-                case 7:  grade = "A";break;
-                case 8, 9:  grade = "A+";break;
-                default:  grade = "F"; // If marks are below the fail threshold
+            String grade = entry.getGrade();
+            if (gradeCountMap.containsKey(grade)) {
+                gradeCountMap.put(grade, gradeCountMap.get(grade) + 1);
             }
-            entry.setGrade(grade);
         }
+
+        // Clear existing data
+        gradeBarChart.getData().clear();
+
+        // Create new series for the bar chart
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Grade Distribution");
+
+        // Add data to the series in the desired order
+        for (String grade : getGradeOrder()) {
+            series.getData().add(new XYChart.Data<>(grade, gradeCountMap.getOrDefault(grade, 0)));
+        }
+
+        // Add series to the bar chart
+        gradeBarChart.getData().add(series);
+
+        // Set axis labels
+        CategoryAxis xAxis = (CategoryAxis) gradeBarChart.getXAxis();
+        xAxis.setLabel("Grade");
+
+        NumberAxis yAxis = (NumberAxis) gradeBarChart.getYAxis();
+        yAxis.setLabel("Number of Students");
     }
 
-    public void back(ActionEvent event) throws IOException {
+    // Define the order of grades for x-axis
+    private String[] getGradeOrder() {
+        return new String[]{"A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "F"};
+    }
+
+    @FXML
+    private LineChart<Number, Number> marksLineChart;
+
+    // Method to populate line chart with normalized curve
+    private void populateMarksLineChart() {
+        List<Integer> marksList = new ArrayList<>();
+
+        // Collect marks from student entries
+        for (StudentEntry entry : gradingTable.getItems()) {
+            marksList.add(Integer.parseInt(entry.getMarks()));
+        }
+
+        // Sort marks for calculating percentile
+        Collections.sort(marksList);
+
+        // Prepare data points for normalized curve
+        XYChart.Series<Number, Number> series = new XYChart.Series<>();
+        series.setName("Normalized Curve");
+
+        // Calculate and add percentile data points
+        int totalStudents = marksList.size();
+        for (int i = 0; i < totalStudents; i++) {
+            double percentile = (i + 1) / (double) totalStudents;
+            series.getData().add(new XYChart.Data<>(marksList.get(i), percentile));
+        }
+
+        // Clear existing data
+        marksLineChart.getData().clear();
+
+        // Add series to line chart
+        marksLineChart.getData().add(series);
+
+        // Set axis labels
+        NumberAxis xAxis = (NumberAxis) marksLineChart.getXAxis();
+        xAxis.setLabel("Marks");
+
+        NumberAxis yAxis = (NumberAxis) marksLineChart.getYAxis();
+        yAxis.setLabel("Percentile");
+    }
+
+
+
+
+    @FXML
+    private void back(ActionEvent event) throws IOException {
         switchScene(event, "course_selection.fxml");
     }
 
-    private void switchScene(javafx.event.ActionEvent event, String fxmlFile) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource(fxmlFile));
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+    private void switchScene(ActionEvent event, String fxmlFile) throws IOException {
+        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        stage.close(); // Close current stage
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+        Stage primaryStage = new Stage();
+        primaryStage.setScene(new Scene(loader.load()));
+        primaryStage.show();
     }
+    @FXML
+    private Button refreshBtn;
 
+    @FXML
+    private void refresh() throws IOException {
+        loadStudents();
+    }
 }
