@@ -44,6 +44,11 @@ public class GradingController {
     private String courseId;
     private int fail;
     private String professorId;
+    @FXML
+    private ComboBox<String> GradingMode;
+    @FXML
+    private TextField FailMarks;
+
 
     @FXML
     private void initialize() {
@@ -65,6 +70,7 @@ public class GradingController {
         gradeColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 
         // Load students into the table
+        GradingMode.getItems().addAll("Absolute Grading", "Relative Grading", "Manually Grading");
 
     }
 
@@ -73,6 +79,9 @@ public class GradingController {
         this.fail = fail;
         this.gradingMode = gradingMode;
         this.professorId = professorId;
+        GradingMode.setValue(gradingMode);
+        FailMarks.setText(String.valueOf(fail));
+
         loadStudents();
 
 
@@ -95,6 +104,8 @@ public class GradingController {
                     gradingTable.setItems(students);
                 }
                 // Perform grading based on mode
+                fail = Integer.parseInt(FailMarks.getText());
+                gradingMode = GradingMode.getValue();
                 if (gradingMode.equals("Absolute Grading"))
                     absoluteGrading();
                 else if (gradingMode.equals("Relative Grading"))
