@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -37,6 +38,13 @@ public class CourseSelectionController {
     private Stage stage;
     private Scene scene;
     private Parent root;
+
+    @FXML
+    private Button AddCBtn;
+
+    @FXML
+    private Button AddSBtn;
+
 
     public void setProfessorId(String professorId) {
         this.professorId = professorId;
@@ -89,6 +97,26 @@ public class CourseSelectionController {
         } catch (SQLException e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Database Error", null, "Error loading courses from the database.");
+        }
+    }
+    public void openAddCourseWindow() {
+        try {
+            // Load the FXML file for the AddCourse window
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("AddCourse.fxml"));
+            Parent root = loader.load();
+            AddCourseController ADD = loader.getController();
+            ADD.setCourseId(professorId);
+
+            // Create a new stage for the AddCourse window
+            Stage stage = new Stage();
+            stage.setTitle("Add Course");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL); // This makes the new window modal
+            stage.showAndWait(); // Show the new window and wait until it is closed
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle the exception appropriately (e.g., show an error message)
         }
     }
 

@@ -198,8 +198,12 @@ public class GradingController {
 
     private void normalizedGrading() {
         // Get user inputs
-       String zeroGrade = zScoreZeroGrade.getText();
+        String zeroGrade = zScoreZeroGrade.getText();
 
+        if (zeroGrade == null || zeroGrade.isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "ERROR", null, "Base grade cannot be empty");
+            return;
+        }
 
         // Calculate mean
         double sum = gradingTable.getItems().stream()
@@ -227,23 +231,27 @@ public class GradingController {
             double zScore = (marks - mean) / standardDeviation;
             String grade;
 
-            int gradeIndex = baseIndex + (int) Math.round(zScore / 0.5);
-            if (gradeIndex < 0) {
-                grade = "C-";
-            } else if (gradeIndex >= grades.length) {
-                grade = grades[grades.length - 2];
-            } else {
-                grade = grades[grades.length - 1 - gradeIndex];
-            }
-
-            // If marks are less than fail, set grade to F
             if (marks < fail) {
                 grade = "F";
+            } else {
+                // Determine the range of grades above and below the base grade
+                int aboveRange = baseIndex;
+                int belowRange = grades.length - baseIndex - 1;
+
+                // Calculate the grade based on the zScore
+                if (zScore >= 0) {
+                    int gradeIndex = (int) Math.round(zScore / (3.0 / aboveRange));
+                    grade = grades[Math.max(0, Math.min(baseIndex - gradeIndex, aboveRange - 1))];
+                } else {
+                    int gradeIndex = (int) Math.round(Math.abs(zScore) / (3.0 / belowRange));
+                    grade = grades[Math.min(baseIndex + gradeIndex, grades.length - 2)];
+                }
             }
 
             entry.setGrade(grade);
         }
     }
+
 
 
     @FXML
