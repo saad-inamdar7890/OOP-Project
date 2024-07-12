@@ -120,6 +120,27 @@ public class CourseSelectionController {
         }
     }
 
+    public void openAddStudentsWindow() {
+        try {
+            // Load the FXML file for the AddCourse window
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("AddStudents.fxml"));
+            Parent root = loader.load();
+            AddStudentsController ADD = loader.getController();
+            ADD.setCourseId(professorId);
+
+            // Create a new stage for the AddCourse window
+            Stage stage = new Stage();
+            stage.setTitle("Add Students");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL); // This makes the new window modal
+            stage.showAndWait(); // Show the new window and wait until it is closed
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle the exception appropriately (e.g., show an error message)
+        }
+    }
+
     public void selectCourse() {
         String selectedCourse = courseComboBox.getValue();
         String gradingMode = GradingMode.getValue();

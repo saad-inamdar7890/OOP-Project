@@ -1,7 +1,9 @@
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
-
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -14,8 +16,6 @@ public class AddCourseController {
 
     @FXML
     private TextField courseCodeField;
-
-
     private String professorId;
 
     @FXML
@@ -26,17 +26,17 @@ public class AddCourseController {
         String courseName = courseNameField.getText();
         String courseCode = courseCodeField.getText();
 
-        String courseDescription = courseDescriptionField.getText();
+
 
         if (courseName.isEmpty() || courseCode.isEmpty() ) {
             showAlert(Alert.AlertType.ERROR, "Form Error!", "Please enter all details");
             return;
         }
 
-        addCourseToDatabase(courseName, courseCode, professorId, courseDescription);
+        addCourseToDatabase(courseName, courseCode, professorId);
     }
 
-    private void addCourseToDatabase(String courseName, String courseCode, String professorId, String courseDescription) {
+    private void addCourseToDatabase(String courseName, String courseCode, String professorId) {
         String url = "jdbc:mysql://localhost:3306/school"; // replace with your database url
         String user = "root"; // replace with your database username
         String password = "618K@PV4saad"; // replace with your database password
@@ -53,11 +53,22 @@ public class AddCourseController {
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
                 showAlert(Alert.AlertType.INFORMATION, "Success", "Course added successfully!");
+
+
+
             } else {
                 showAlert(Alert.AlertType.ERROR, "Error", "Failed to add course.");
             }
 
-        } catch (SQLException e) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("course_selection.fxml"));
+            Parent root = loader.load();
+
+            // Get the controller and pass the username
+            CourseSelectionController courseSelectionController = loader.getController();
+
+            courseSelectionController.setProfessorId(professorId);
+
+        } catch (SQLException | IOException e) {
             showAlert(Alert.AlertType.ERROR, "Database Error", e.getMessage());
         }
     }
