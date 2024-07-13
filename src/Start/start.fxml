@@ -13,7 +13,7 @@
                 <Image url="@../Image/01_05_2020-jnu_admission.jpg" />
             </image>
         </ImageView>
-        <Button layoutX="119.0" layoutY="275.0" mnemonicParsing="false" onAction="#switchToLogin" text="Course_Selection.Student">
+        <Button layoutX="119.0" layoutY="275.0" mnemonicParsing="false" onAction="#switchToLogin" text="Course_Selection.Add_Students.Student">
             <font>
                 <Font name="Arial Black" size="18.0" />
             </font>

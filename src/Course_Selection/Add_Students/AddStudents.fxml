@@ -14,11 +14,11 @@
     </padding>
     <Label text="Select Course:"/>
     <ComboBox fx:id="courseComboBox"/>
-    <Label text="Course_Selection.Student List:"/>
+    <Label text="Course_Selection.Add_Students.Student List:"/>
     <TableView fx:id="studentTableView">
         <columns>
-            <TableColumn fx:id="studentNameColumn" text="Course_Selection.Student Name" prefWidth="200"/>
-            <TableColumn fx:id="studentIdColumn" text="Course_Selection.Student ID" prefWidth="150"/>
+            <TableColumn fx:id="studentNameColumn" text="Course_Selection.Add_Students.Student Name" prefWidth="200"/>
+            <TableColumn fx:id="studentIdColumn" text="Course_Selection.Add_Students.Student ID" prefWidth="150"/>
             <TableColumn fx:id="marksColumn" text="Marks" prefWidth="100"/>
         </columns>
     </TableView>

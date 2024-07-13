@@ -27,7 +27,7 @@
                      <children>
                         <TableView fx:id="gradingTable" prefHeight="480.0" prefWidth="393.0">
                           <columns>
-                            <TableColumn fx:id="studentNameColumn" prefWidth="154.0" text="Course_Selection.Student Name" />
+                            <TableColumn fx:id="studentNameColumn" prefWidth="154.0" text="Course_Selection.Add_Students.Student Name" />
                               <TableColumn fx:id="studentIdColumn" prefWidth="75.0" text="I.D." />
                             <TableColumn fx:id="marksColumn" prefWidth="130.0" text="Marks" />
                               <TableColumn fx:id="gradeColumn" prefWidth="85.0" text="Grade" />

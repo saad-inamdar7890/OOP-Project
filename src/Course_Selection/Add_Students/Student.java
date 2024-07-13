@@ -1,4 +1,4 @@
-package Course_Selection;
+package Course_Selection.Add_Students;
 
 public class Student {
     private String name;

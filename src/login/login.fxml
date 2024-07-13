@@ -15,7 +15,7 @@
       <TextField fx:id="Username" layoutX="226.0" layoutY="177.0" onAction="#login" />
       <TextField fx:id="password" layoutX="226.0" layoutY="243.0" onAction="#login" />
       <Button layoutX="302.0" layoutY="313.0" mnemonicParsing="false" onAction="#close" prefHeight="32.0" prefWidth="93.0" text="Cancel" />
-      <Text fontSmoothingType="LCD" layoutX="248.0" layoutY="87.0" scaleX="3.0" scaleY="4.0" scaleZ="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Course_Selection.Student Login" textAlignment="CENTER" wrappingWidth="163.06381225585938" />
+      <Text fontSmoothingType="LCD" layoutX="248.0" layoutY="87.0" scaleX="3.0" scaleY="4.0" scaleZ="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Course_Selection.Add_Students.Student Login" textAlignment="CENTER" wrappingWidth="163.06381225585938" />
 
         <ImageView fitHeight="120.0" fitWidth="164.0" layoutX="42.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
           
