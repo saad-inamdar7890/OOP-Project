@@ -1,3 +1,7 @@
+package Course_Selection;
+import Course_Selection.Add_Course.AddCourseController;
+import Course_Selection.Add_Students.AddStudentsController;
+import Grading.GradingController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -102,7 +106,7 @@ public class CourseSelectionController {
     public void openAddCourseWindow() {
         try {
             // Load the FXML file for the AddCourse window
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("AddCourse.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Course_Selection/AddCourse.fxml"));
             Parent root = loader.load();
             AddCourseController ADD = loader.getController();
             ADD.setCourseId(professorId);
@@ -123,7 +127,7 @@ public class CourseSelectionController {
     public void openAddStudentsWindow() {
         try {
             // Load the FXML file for the AddCourse window
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("AddStudents.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Course_Selection/AddStudents.fxml"));
             Parent root = loader.load();
             AddStudentsController ADD = loader.getController();
             ADD.setCourseId(professorId);

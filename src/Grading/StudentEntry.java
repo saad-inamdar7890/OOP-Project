@@ -1,3 +1,5 @@
+package Grading;
+
 public class StudentEntry {
     private String studentId;
     private String studentName;

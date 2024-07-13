@@ -1,3 +1,7 @@
+package login;
+
+import Course_Selection.CourseSelectionController;
+import Student_Result.ResultController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -7,7 +11,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.sql.*;
@@ -57,7 +60,7 @@ public class controller {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("result.fxml"));
                     Parent root = loader.load();
 
-                    // Get the controller and pass the username
+                    // Get the login.controller and pass the username
                     ResultController resultController = loader.getController();
                     resultController.displayResult(Username.getText());
 
@@ -76,15 +79,15 @@ public class controller {
     }
 
     public void switchToLogin(javafx.event.ActionEvent event) throws IOException {
-        switchScene(event, "login.fxml");
+        switchScene(event, "login/login.fxml");
     }
 
     public void switchToAdmin_Login(javafx.event.ActionEvent event) throws IOException {
-        switchScene(event, "A_login.fxml");
+        switchScene(event, "login/A_login.fxml");
     }
 
     public void switchTostart(javafx.event.ActionEvent event) throws IOException {
-        switchScene(event, "start.fxml");
+        switchScene(event, "Start/start.fxml");
     }
 
 
@@ -121,7 +124,7 @@ public class controller {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("course_selection.fxml"));
                     Parent root = loader.load();
 
-                    // Get the controller and pass the username
+                    // Get the login.controller and pass the username
                     CourseSelectionController courseSelectionController = loader.getController();
                     String professorId = result.getString("professor_id");
                     courseSelectionController.setProfessorId(professorId);

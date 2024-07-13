@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="vBox" alignment="center" prefHeight="447.0" prefWidth="535.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ResultController">
+<VBox fx:id="vBox" alignment="center" prefHeight="447.0" prefWidth="535.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Student_Result.ResultController">
    <HBox prefHeight="27.0" prefWidth="535.0">
       <children>
           <Label fx:id="titleLabel" prefHeight="31.0" prefWidth="46.0" text="Name :" />

@@ -8,17 +8,17 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="AddStudentsController" spacing="10" alignment="CENTER">
+<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="Course_Selection.Add_Students.AddStudentsController" spacing="10" alignment="CENTER">
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
     <Label text="Select Course:"/>
     <ComboBox fx:id="courseComboBox"/>
-    <Label text="Student List:"/>
+    <Label text="Course_Selection.Student List:"/>
     <TableView fx:id="studentTableView">
         <columns>
-            <TableColumn fx:id="studentNameColumn" text="Student Name" prefWidth="200"/>
-            <TableColumn fx:id="studentIdColumn" text="Student ID" prefWidth="150"/>
+            <TableColumn fx:id="studentNameColumn" text="Course_Selection.Student Name" prefWidth="200"/>
+            <TableColumn fx:id="studentIdColumn" text="Course_Selection.Student ID" prefWidth="150"/>
             <TableColumn fx:id="marksColumn" text="Marks" prefWidth="100"/>
         </columns>
     </TableView>

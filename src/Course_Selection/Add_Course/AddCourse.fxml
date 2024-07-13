@@ -6,7 +6,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.GridPane?>
 
-<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="AddCourseController">
+<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="Course_Selection.Add_Course.AddCourseController">
     <padding>
         <Insets top="10" right="10" bottom="10" left="10"/>
     </padding>

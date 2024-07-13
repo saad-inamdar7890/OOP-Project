@@ -1,3 +1,5 @@
+package Start;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,7 +17,7 @@ public class Start extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
 
-        Parent root = FXMLLoader.load(getClass().getResource("start.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("Start/start.fxml"));
         primaryStage.setTitle("Saad The Great");
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);

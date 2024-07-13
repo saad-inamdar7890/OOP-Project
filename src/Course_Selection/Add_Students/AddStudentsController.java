@@ -1,3 +1,6 @@
+package Course_Selection.Add_Students;
+
+import Course_Selection.Student;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -57,7 +60,7 @@ public class AddStudentsController {
         // Bind the student list to the table view
         studentTableView.setItems(studentList);
     }
-    void setCourseId(String professorId){
+    public void setCourseId(String professorId){
         this.professorId = professorId;
 
     }

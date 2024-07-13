@@ -1,3 +1,4 @@
+package Course_Selection;
 
 public class Student {
     private String name;
