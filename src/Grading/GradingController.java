@@ -385,7 +385,7 @@ public class GradingController {
 
     @FXML
     private void back(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Course_Selection/course_selection.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Course_Selection/course_selection.fxml"));
         Parent root = loader.load();
 
         // Get the controller and pass the username

@@ -41,16 +41,6 @@ public class AddStudentsController {
 
     @FXML
     public void initialize() {
-        // Initialize the course combo box with data from the database
-        try {
-             connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/school", "root", "618K@PV4saad");
-        } catch (SQLException e) {
-            e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Database Connection Error", null, "Failed to connect to the database.");
-        }
-
-        loadCourses();
-
         // Initialize the table columns
         studentNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         studentIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -58,12 +48,27 @@ public class AddStudentsController {
 
         // Bind the student list to the table view
         studentTableView.setItems(studentList);
-    }
-    public void setCourseId(String professorId){
-        this.professorId = professorId;
 
+        // Initialize the course combo box with data from the database
+        try {
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/school", "root", "618K@PV4saad");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Database Connection Error", null, "Failed to connect to the database.");
+        }
     }
+
+    public void setProfessorId(String professorId) {
+        this.professorId = professorId;
+        loadCourses(); // Load courses after setting the professorId
+    }
+
     private void loadCourses() {
+        if (professorId == null || professorId.isEmpty()) {
+            System.out.println("Professor ID is not set.");
+            return;
+        }
+
         String query = "SELECT course_id, course_name FROM course WHERE professor_id = ?";
         ObservableList<String> courses = FXCollections.observableArrayList();
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -72,9 +77,10 @@ public class AddStudentsController {
                 while (resultSet.next()) {
                     String courseName = resultSet.getString("course_name");
                     String courseId = resultSet.getString("course_id");
-                    courses.add(courseId + "--" + courseName);
+                    courses.add(courseId + " - " + courseName);
                 }
                 courseComboBox.setItems(courses);
+                System.out.println("Courses loaded: " + courses); // Log the loaded courses
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -96,8 +102,20 @@ public class AddStudentsController {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             studentList.clear();
+            boolean isFirstRow = true;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
+                if (isFirstRow) {
+                    isFirstRow = false;
+                    if (values.length == 3) {
+                        try {
+                            Integer.parseInt(values[2].trim());
+                        } catch (NumberFormatException e) {
+                            // Skip the first row if the third column is not a number
+                            continue;
+                        }
+                    }
+                }
                 if (values.length == 3) {
                     String studentName = values[0].trim();
                     String studentId = values[1].trim();
@@ -116,8 +134,7 @@ public class AddStudentsController {
         if (selectedCourse != null && !studentList.isEmpty()) {
             String courseId = selectedCourse.split(" - ")[0]; // Extract the course ID
 
-            try (Connection connection =  DriverManager.getConnection("jdbc:mysql://localhost:3306/school", "root", "618K@PV4saad"))
-                 {
+            try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/school", "root", "618K@PV4saad")) {
                 String insertSQL = "INSERT INTO result (student_id, course_id, marks, grade) VALUES (?, ?, ?, NULL)";
                 for (Student student : studentList) {
                     try (PreparedStatement preparedStatement = connection.prepareStatement(insertSQL)) {
@@ -128,6 +145,8 @@ public class AddStudentsController {
                     }
                 }
                 System.out.println("Students added to course: " + courseId);
+                Stage stage = (Stage)  courseComboBox.getScene().getWindow();
+                stage.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }

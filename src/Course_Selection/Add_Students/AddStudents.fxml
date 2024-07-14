@@ -8,20 +8,20 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="Course_Selection.Add_Students.AddStudentsController" spacing="10" alignment="CENTER">
+<VBox alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="Course_Selection.Add_Students.AddStudentsController">
     <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
+        <Insets bottom="20" left="20" right="20" top="20" />
     </padding>
-    <Label text="Select Course:"/>
-    <ComboBox fx:id="courseComboBox"/>
-    <Label text="Course_Selection.Add_Students.Student List:"/>
+    <Label text="Select Course:" />
+    <ComboBox fx:id="courseComboBox" />
+    <Label text="Student List:" />
     <TableView fx:id="studentTableView">
         <columns>
-            <TableColumn fx:id="studentNameColumn" text="Course_Selection.Add_Students.Student Name" prefWidth="200"/>
-            <TableColumn fx:id="studentIdColumn" text="Course_Selection.Add_Students.Student ID" prefWidth="150"/>
-            <TableColumn fx:id="marksColumn" text="Marks" prefWidth="100"/>
+            <TableColumn fx:id="studentNameColumn" prefWidth="200" text="Student Name" />
+            <TableColumn fx:id="studentIdColumn" prefWidth="150" text="Student ID" />
+            <TableColumn fx:id="marksColumn" prefWidth="100" text="Marks" />
         </columns>
     </TableView>
-    <Button text="Browse CSV" onAction="#handleBrowseCSV"/>
-    <Button text="Save" onAction="#handleSave"/>
+    <Button onAction="#handleBrowseCSV" text="Browse CSV" />
+    <Button onAction="#handleSave" text="Save" />
 </VBox>
