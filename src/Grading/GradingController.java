@@ -388,7 +388,7 @@ public class GradingController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Course_Selection/course_selection.fxml"));
         Parent root = loader.load();
 
-        // Get the login.controller and pass the username
+        // Get the controller and pass the username
         CourseSelectionController courseSelectionController = loader.getController();
 
         courseSelectionController.setProfessorId(professorId);

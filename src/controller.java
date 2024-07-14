@@ -1,5 +1,3 @@
-package login;
-
 import Course_Selection.CourseSelectionController;
 import Student_Result.ResultController;
 import javafx.fxml.FXML;
@@ -57,10 +55,10 @@ public class controller {
                 if (result.next()) {
                     showAlert(Alert.AlertType.INFORMATION, "INFORMATION MESSAGE", null, "Successfully Login");
 
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("result.fxml"));
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/Student_Result/result.fxml"));
                     Parent root = loader.load();
 
-                    // Get the login.controller and pass the username
+                    // Get the controller and pass the username
                     ResultController resultController = loader.getController();
                     resultController.displayResult(Username.getText());
 
@@ -79,15 +77,15 @@ public class controller {
     }
 
     public void switchToLogin(javafx.event.ActionEvent event) throws IOException {
-        switchScene(event, "login/login.fxml");
+        switchScene(event, "login.fxml");
     }
 
     public void switchToAdmin_Login(javafx.event.ActionEvent event) throws IOException {
-        switchScene(event, "login/A_login.fxml");
+        switchScene(event, "A_login.fxml");
     }
 
     public void switchTostart(javafx.event.ActionEvent event) throws IOException {
-        switchScene(event, "Start/start.fxml");
+        switchScene(event, "start.fxml");
     }
 
 
@@ -121,10 +119,10 @@ public class controller {
                 if (result.next()) {
                     showAlert(Alert.AlertType.INFORMATION, "INFORMATION MESSAGE", null, "Successfully Login");
 
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("course_selection.fxml"));
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/Course_Selection/course_selection.fxml"));
                     Parent root = loader.load();
 
-                    // Get the login.controller and pass the username
+                    // Get the controller and pass the username
                     CourseSelectionController courseSelectionController = loader.getController();
                     String professorId = result.getString("professor_id");
                     courseSelectionController.setProfessorId(professorId);

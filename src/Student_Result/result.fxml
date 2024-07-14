@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="vBox" alignment="center" prefHeight="447.0" prefWidth="535.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Student_Result.ResultController">
+<VBox fx:id="vBox" alignment="center" prefHeight="487.0" prefWidth="535.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Student_Result.ResultController">
    <HBox prefHeight="27.0" prefWidth="535.0">
       <children>
           <Label fx:id="titleLabel" prefHeight="31.0" prefWidth="46.0" text="Name :" />
@@ -28,11 +33,110 @@
           </TableView>
       </children>
    </StackPane>
-   <HBox prefHeight="25.0" prefWidth="403.0">
+   <HBox alignment="TOP_CENTER" prefHeight="33.0" prefWidth="535.0">
       <children>
-          <Label fx:id="cgpaLabel" prefHeight="32.0" prefWidth="39.0" text="CGPA: " />
-         <Label fx:id="cgpaL" prefHeight="25.0" prefWidth="34.0" />
-         <Label prefHeight="35.0" prefWidth="31.0" text="/ 10" />
+         <Label alignment="CENTER" prefHeight="27.0" prefWidth="75.0" text="Total Credits" />
+         <Separator orientation="VERTICAL" prefHeight="44.0" prefWidth="9.0">
+            <effect>
+               <Glow />
+            </effect>
+            <opaqueInsets>
+               <Insets right="14.0" top="27.0" />
+            </opaqueInsets>
+         </Separator>
+         <Label alignment="CENTER" prefHeight="27.0" prefWidth="72.0" text="Total Points" />
+         <Separator orientation="VERTICAL" prefHeight="44.0" prefWidth="9.0">
+            <effect>
+               <Glow />
+            </effect>
+            <opaqueInsets>
+               <Insets right="14.0" top="27.0" />
+            </opaqueInsets>
+         </Separator>
+         <Label alignment="CENTER" prefHeight="27.0" prefWidth="87.0" text="SGPA" />
+         <Separator orientation="VERTICAL" prefHeight="44.0" prefWidth="9.0">
+            <effect>
+               <Glow />
+            </effect>
+            <opaqueInsets>
+               <Insets right="14.0" top="27.0" />
+            </opaqueInsets>
+         </Separator>
+         <Label alignment="CENTER" prefHeight="27.0" prefWidth="75.0" text="Total Credits" />
+         <Separator orientation="VERTICAL" prefHeight="44.0" prefWidth="9.0">
+            <effect>
+               <Glow />
+            </effect>
+            <opaqueInsets>
+               <Insets right="14.0" top="27.0" />
+            </opaqueInsets>
+         </Separator>
+         <Label alignment="CENTER" prefHeight="27.0" prefWidth="84.0" text="Total Points" />
+         <Separator orientation="VERTICAL" prefHeight="44.0" prefWidth="9.0">
+            <effect>
+               <Glow />
+            </effect>
+            <opaqueInsets>
+               <Insets right="14.0" top="27.0" />
+            </opaqueInsets>
+         </Separator>
+         <Label alignment="CENTER" prefHeight="27.0" prefWidth="87.0" text="CGPA" />
       </children>
    </HBox>
+   <HBox prefHeight="32.0" prefWidth="535.0">
+      <children>
+         <Label fx:id="curr_Credit" contentDisplay="CENTER" prefHeight="27.0" prefWidth="80.0" />
+         <Separator orientation="VERTICAL" prefHeight="44.0" prefWidth="9.0">
+            <effect>
+               <Glow />
+            </effect>
+            <opaqueInsets>
+               <Insets right="14.0" top="27.0" />
+            </opaqueInsets>
+         </Separator>
+         <Label fx:id="curr_points" contentDisplay="CENTER" prefHeight="27.0" prefWidth="72.0" />
+         <Separator orientation="VERTICAL" prefHeight="44.0" prefWidth="9.0">
+            <effect>
+               <Glow />
+            </effect>
+            <opaqueInsets>
+               <Insets right="14.0" top="27.0" />
+            </opaqueInsets>
+         </Separator>
+         <Label fx:id="sgpa" alignment="CENTER" prefHeight="27.0" prefWidth="87.0" />
+         <Separator orientation="VERTICAL" prefHeight="44.0" prefWidth="9.0">
+            <effect>
+               <Glow />
+            </effect>
+            <opaqueInsets>
+               <Insets right="14.0" top="27.0" />
+            </opaqueInsets>
+         </Separator>
+         <Label fx:id="Total_Credits" alignment="CENTER" prefHeight="27.0" prefWidth="75.0" />
+         <Separator orientation="VERTICAL" prefHeight="44.0" prefWidth="9.0">
+            <effect>
+               <Glow />
+            </effect>
+            <opaqueInsets>
+               <Insets right="14.0" top="27.0" />
+            </opaqueInsets>
+         </Separator>
+         <Label fx:id="Total_Points" alignment="CENTER" prefHeight="27.0" prefWidth="84.0" />
+         <Separator orientation="VERTICAL" prefHeight="44.0" prefWidth="9.0">
+            <effect>
+               <Glow />
+            </effect>
+            <opaqueInsets>
+               <Insets right="14.0" top="27.0" />
+            </opaqueInsets>
+         </Separator>
+         <Label fx:id="CGPA" alignment="CENTER" prefHeight="27.0" prefWidth="96.0" />
+      </children>
+   </HBox>
+   <ButtonBar nodeOrientation="LEFT_TO_RIGHT" prefHeight="46.0" prefWidth="535.0">
+     <buttons>
+         <Button alignment="CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="411.0" text="Raise an Issue" />
+       <Button alignment="CENTER" mnemonicParsing="false" onAction="#accept_Result" prefHeight="30.0" prefWidth="133.0" text="Accept the Result" textAlignment="CENTER" />
+     </buttons>
+   </ButtonBar>
 </VBox>

@@ -106,10 +106,10 @@ public class CourseSelectionController {
     public void openAddCourseWindow() {
         try {
             // Load the FXML file for the AddCourse window
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("Course_Selection/AddCourse.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Add_Course/AddCourse.fxml"));
             Parent root = loader.load();
             AddCourseController ADD = loader.getController();
-            ADD.setCourseId(professorId);
+            ADD.setProfessorId(professorId);
 
             // Create a new stage for the AddCourse window
             Stage stage = new Stage();
@@ -117,6 +117,7 @@ public class CourseSelectionController {
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL); // This makes the new window modal
             stage.showAndWait(); // Show the new window and wait until it is closed
+            loadCourses();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -127,7 +128,7 @@ public class CourseSelectionController {
     public void openAddStudentsWindow() {
         try {
             // Load the FXML file for the AddCourse window
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("Course_Selection/AddStudents.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Add_Students/AddStudents.fxml"));
             Parent root = loader.load();
             AddStudentsController ADD = loader.getController();
             ADD.setCourseId(professorId);

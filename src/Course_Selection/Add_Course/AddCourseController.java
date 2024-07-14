@@ -4,8 +4,11 @@ import Course_Selection.CourseSelectionController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -19,19 +22,18 @@ public class AddCourseController {
 
     @FXML
     private TextField courseCodeField;
-    private String professorId;
 
     @FXML
     private TextField courseDescriptionField;
+
+    private String professorId;
 
     @FXML
     private void handleAddCourse() {
         String courseName = courseNameField.getText();
         String courseCode = courseCodeField.getText();
 
-
-
-        if (courseName.isEmpty() || courseCode.isEmpty() ) {
+        if (courseName.isEmpty() || courseCode.isEmpty()) {
             showAlert(Alert.AlertType.ERROR, "Form Error!", "Please enter all details");
             return;
         }
@@ -57,27 +59,19 @@ public class AddCourseController {
             if (affectedRows > 0) {
                 showAlert(Alert.AlertType.INFORMATION, "Success", "Course added successfully!");
 
-
+                Stage stage = (Stage) courseNameField.getScene().getWindow();
+                stage.close();
 
             } else {
                 showAlert(Alert.AlertType.ERROR, "Error", "Failed to add course.");
             }
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("Course_Selection/course_selection.fxml"));
-            Parent root = loader.load();
-
-            // Get the login.controller and pass the username
-            CourseSelectionController courseSelectionController = loader.getController();
-
-            courseSelectionController.setProfessorId(professorId);
-
-        } catch (SQLException | IOException e) {
+        } catch (SQLException  e) {
             showAlert(Alert.AlertType.ERROR, "Database Error", e.getMessage());
         }
     }
-    public void setCourseId(String professorId){
-        this.professorId = professorId;
 
+    public void setProfessorId(String professorId) {
+        this.professorId = professorId;
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {

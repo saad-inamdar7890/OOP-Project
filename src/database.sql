@@ -244,6 +244,98 @@ INSERT INTO result (student_id, course_id, marks, grade) VALUES
 ('S060', 'C001', 79, 'C'), ('S060', 'C002', 90, 'A'), ('S060', 'C003', 87, 'A');
 
 
+-- Alter the total_credit column to DECIMAL type
+ALTER TABLE student
+MODIFY total_credit DECIMAL(5, 2);
+
+-- Updating each student with specific total_credit and cgpa values
+UPDATE student
+SET total_credit = 55.00, cgpa = 8.50
+WHERE student_id = 'S001';
+
+UPDATE student
+SET total_credit = 58.00, cgpa = 7.20
+WHERE student_id = 'S002';
+
+UPDATE student
+SET total_credit = 60.00, cgpa = 9.10
+WHERE student_id = 'S003';
+
+UPDATE student
+SET total_credit = 53.00, cgpa = 8.30
+WHERE student_id = 'S004';
+
+UPDATE student
+SET total_credit = 59.00, cgpa = 7.80
+WHERE student_id = 'S005';
+
+UPDATE student
+SET total_credit = 54.00, cgpa = 6.50
+WHERE student_id = 'S006';
+
+UPDATE student
+SET total_credit = 57.00, cgpa = 8.70
+WHERE student_id = 'S007';
+
+UPDATE student
+SET total_credit = 56.00, cgpa = 9.00
+WHERE student_id = 'S008';
+
+UPDATE student
+SET total_credit = 52.00, cgpa = 7.10
+WHERE student_id = 'S009';
+
+UPDATE student
+SET total_credit = 60.00, cgpa = 8.90
+WHERE student_id = 'S010';
+
+
+-- Add the new column total_points
+ALTER TABLE student
+ADD COLUMN total_points DECIMAL(7, 2);
+
+-- Update each student record with the calculated value for total_points
+UPDATE student
+SET total_points = total_credit * cgpa
+WHERE student_id = 'S001';
+
+UPDATE student
+SET total_points = total_credit * cgpa
+WHERE student_id = 'S002';
+
+UPDATE student
+SET total_points = total_credit * cgpa
+WHERE student_id = 'S003';
+
+UPDATE student
+SET total_points = total_credit * cgpa
+WHERE student_id = 'S004';
+
+UPDATE student
+SET total_points = total_credit * cgpa
+WHERE student_id = 'S005';
+
+UPDATE student
+SET total_points = total_credit * cgpa
+WHERE student_id = 'S006';
+
+UPDATE student
+SET total_points = total_credit * cgpa
+WHERE student_id = 'S007';
+
+UPDATE student
+SET total_points = total_credit * cgpa
+WHERE student_id = 'S008';
+
+UPDATE student
+SET total_points = total_credit * cgpa
+WHERE student_id = 'S009';
+
+UPDATE student
+SET total_points = total_credit * cgpa
+WHERE student_id = 'S010';
+
+
 select * from student;
 select * from professors;
 select * from result;
