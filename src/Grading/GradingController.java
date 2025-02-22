@@ -149,6 +149,7 @@ public class GradingController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        populateMarksHistogram();
     }
 
     @FXML
@@ -194,6 +195,7 @@ public class GradingController {
             }
             entry.setGrade(grade);
         }
+        populateMarksHistogram();
     }
 
     private void relativeGrading() {
@@ -209,15 +211,15 @@ public class GradingController {
             int blockNumber = (int) ((marks - fail) / block);
             String grade;
             switch (blockNumber) {
-                case 0:  grade = "C-"; break;
-                case 1:  grade = "C"; break;
-                case 2:  grade = "C+"; break;
-                case 3:  grade = "B-"; break;
-                case 4:  grade = "B"; break;
-                case 5:  grade = "B+"; break;
-                case 6:  grade = "A-"; break;
-                case 7:  grade = "A"; break;
-                case 8:
+                case 0:
+                case 1:  grade = "C-"; break;
+                case 2:  grade = "C"; break;
+                case 3: grade = "C+"; break;
+                case 4:   grade = "B-"; break;
+                case 5:  grade = "B"; break;
+                case 6:  grade = "B+"; break;
+                case 7: grade = "A-"; break;
+                case 8: grade = "A"; break;
                 case 9:  grade = "A+"; break;
                 default: grade = "F";
             }
@@ -274,7 +276,6 @@ public class GradingController {
             entry.setGrade(grade);
         }
     }
-
 
 
     @FXML
@@ -561,5 +562,41 @@ private void calculatePerformanceIndicators() {
         }
     }
 
+    @FXML
+    private BarChart<String, Number> marksHistogramChart;
+    private void populateMarksHistogram() {
+        // Number of bins and bin size
+        int binCount = 10;
+        int binSize = 10;
+
+        // Initialize frequency array
+        int[] frequency = new int[binCount];
+
+        // Collect and categorize the marks
+        for (StudentEntry entry : gradingTable.getItems()) {
+            int mark = Integer.parseInt(entry.getMarks());
+            int binIndex = mark / binSize;
+            if (binIndex >= binCount) {
+                binIndex = binCount - 1;
+            }
+            frequency[binIndex]++;
+        }
+
+        // Clear existing data
+        marksHistogramChart.getData().clear();
+
+        // Create a new series
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Marks Histogram");
+
+        // Add data to the series
+        for (int i = 0; i < binCount; i++) {
+            String rangeLabel = (i * binSize) + "-" + ((i + 1) * binSize - 1);
+            series.getData().add(new XYChart.Data<>(rangeLabel, frequency[i]));
+        }
+
+        // Populate the histogram
+        marksHistogramChart.getData().add(series);
+    }
 
 }
