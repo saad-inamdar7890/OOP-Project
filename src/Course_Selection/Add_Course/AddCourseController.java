@@ -44,7 +44,7 @@ public class AddCourseController {
     private void addCourseToDatabase(String courseName, String courseCode, String professorId) {
         String url = "jdbc:mysql://localhost:3306/school"; // replace with your database url
         String user = "root"; // replace with your database username
-        String password = "618K@PV4saad"; // replace with your database password
+        String password = "Ibrahim@830"; // replace with your database password
 
         String sql = "INSERT INTO course (course_id, course_name, professor_id) VALUES (?, ?, ?)";
 

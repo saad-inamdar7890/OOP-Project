@@ -14,9 +14,12 @@ import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+//import java.sql.DriverManager;
 import java.sql.*;
 import java.util.*;
 import javafx.scene.chart.LineChart;
@@ -26,6 +29,7 @@ import javafx.scene.chart.XYChart;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GradingController {
     private Stage stage;
@@ -56,13 +60,24 @@ public class GradingController {
     private TextField zScoreZeroGrade;
     @FXML
     private ToolBar baseGradeCont;
+    @FXML
+    private Label performanceLabel;
+
+    @FXML
+    private Label meanLabel;
+    @FXML
+    private Label medianLabel;
+    @FXML
+    private Label stdDevLabel;
+    @FXML
+    private Label passRateLabel;
 
 
     @FXML
     private void initialize() {
         // Initialize database connection
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/school", "root", "618K@PV4saad");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/school", "root", "Ibrahim@830");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -77,12 +92,20 @@ public class GradingController {
         marksColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         gradeColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         gradingTable.setEditable(true);
-
+        performanceLabel = new Label();
         // Load students into the table
         GradingMode.getItems().addAll("Absolute Grading", "Relative Grading","Normalised Grading", "Manually Grading");
         zScoreZeroGrade.setText("B+");
         baseGradeCont.setVisible(false);
         GradingMode.setOnAction(event -> gradingModeChanged());
+
+        // Add listeners
+        GradingMode.setOnAction(e -> gradingModeChanged());
+        FailMarks.textProperty().addListener((obs, old, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                FailMarks.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
     }
 
     public void setCourseId(String courseId, String gradingMode, int fail , String professorId) {
@@ -149,21 +172,23 @@ public class GradingController {
     private void absoluteGrading() {
         int range = 100 - fail;
         double block = range / 9.0;
+        System.out.println("Range: " + range + ", Block: " + block);
 
         for (StudentEntry entry : gradingTable.getItems()) {
             int marks = Integer.parseInt(entry.getMarks());
             int blockNumber = (int) ((marks - fail) / block);
+            System.out.println("Marks: " + marks + ", Block Number: " + blockNumber);
             String grade;
             switch (blockNumber) {
-                case 0:  grade = "C-"; break;
-                case 1:  grade = "C"; break;
-                case 2:  grade = "C+"; break;
-                case 3:  grade = "B-"; break;
-                case 4:  grade = "B"; break;
-                case 5:  grade = "B+"; break;
-                case 6:  grade = "A-"; break;
-                case 7:  grade = "A"; break;
-                case 8:
+                case 0:
+                case 1:  grade = "C-"; break;
+                case 2:  grade = "C"; break;
+                case 3: grade = "C+"; break;
+                case 4:   grade = "B-"; break;
+                case 5:  grade = "B"; break;
+                case 6:  grade = "B+"; break;
+                case 7: grade = "A-"; break;
+                case 8: grade = "A"; break;
                 case 9:  grade = "A+"; break;
                 default: grade = "F";
             }
@@ -201,7 +226,6 @@ public class GradingController {
     }
 
     private void normalizedGrading() {
-        // Get user inputs
         String zeroGrade = zScoreZeroGrade.getText();
 
         if (zeroGrade == null || zeroGrade.isEmpty()) {
@@ -209,19 +233,16 @@ public class GradingController {
             return;
         }
 
-        // Calculate mean
         double sum = gradingTable.getItems().stream()
                 .mapToInt(entry -> Integer.parseInt(entry.getMarks()))
                 .sum();
         double mean = sum / gradingTable.getItems().size();
 
-        // Calculate standard deviation
         double variance = gradingTable.getItems().stream()
                 .mapToDouble(entry -> Math.pow(Integer.parseInt(entry.getMarks()) - mean, 2))
                 .sum() / gradingTable.getItems().size();
         double standardDeviation = Math.sqrt(variance);
 
-        // Determine grade segments based on base grade
         String[] grades = {"A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "F"};
         int baseIndex = Arrays.asList(grades).indexOf(zeroGrade);
 
@@ -238,11 +259,9 @@ public class GradingController {
             if (marks < fail) {
                 grade = "F";
             } else {
-                // Determine the range of grades above and below the base grade
                 int aboveRange = baseIndex;
                 int belowRange = grades.length - baseIndex - 1;
 
-                // Calculate the grade based on the zScore
                 if (zScore >= 0) {
                     int gradeIndex = (int) Math.round(zScore / (3.0 / aboveRange));
                     grade = grades[Math.max(0, Math.min(baseIndex - gradeIndex, aboveRange - 1))];
@@ -421,4 +440,126 @@ public class GradingController {
     private void refresh() throws IOException {
         loadStudents();
     }
+
+//    private void showComparativeAnalysis() {
+//        // Add comparison with previous years/sections
+//        ComparativeChart.Series<String, Number> currentBatch = new ComparativeChart.Series<>();
+//        ComparativeChart.Series<String, Number> previousBatch = new ComparativeChart.Series<>();
+//        // Add data points for comparison
+//    }
+//
+private void calculatePerformanceIndicators() {
+    List<Integer> marksList = new ArrayList<>();
+    for (StudentEntry entry : gradingTable.getItems()) {
+        marksList.add(Integer.parseInt(entry.getMarks()));
+    }
+    int totalStudents = marksList.size();
+    int passCount = (int) gradingTable.getItems().stream().filter(entry -> Integer.parseInt(entry.getMarks()) >= fail).count();
+    int passRate = (int)((passCount / (double) totalStudents) * 100);
+    int failRate = 100 - passRate;
+    double classAverage = gradingTable.getItems().stream().mapToInt(entry -> Integer.parseInt(entry.getMarks())).average().orElse(0.0);
+
+    performanceLabel.setText(String.format(
+            "Pass Rate: %d%%\nFail Rate: %d%%\nClass Average: %.2f",
+            passRate, failRate, classAverage
+    ));
+}
+    private void addGradeDistributionTrend() {
+        // Add line chart showing grade distribution over time
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Grade Distribution Trend");
+        // Add data points from previous sessions
+    }
+
+    private void updateStatistics() {
+        List<Double> marks = getMarksList();
+        if (marks.isEmpty()) return;
+
+        // Calculate statistics
+        double mean = calculateMean(marks);
+        double median = calculateMedian(marks);
+        double stdDev = calculateStdDev(marks, mean);
+        double passRate = calculatePassRate(marks);
+
+        // Update labels
+        meanLabel.setText(String.format("%.2f", mean));
+        medianLabel.setText(String.format("%.2f", median));
+        stdDevLabel.setText(String.format("%.2f", stdDev));
+        passRateLabel.setText(String.format("%.1f%%", passRate * 100));
+    }
+
+    private List<Double> getMarksList() {
+        return gradingTable.getItems().stream()
+                .map(student -> Double.parseDouble(student.getMarks()))
+                .collect(Collectors.toList());
+    }
+
+    private double calculateMean(List<Double> marks) {
+        return marks.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+    }
+
+    private double calculateMedian(List<Double> marks) {
+        List<Double> sorted = new ArrayList<>(marks);
+        Collections.sort(sorted);
+        int middle = sorted.size() / 2;
+        if (sorted.size() % 2 == 0) {
+            return (sorted.get(middle - 1) + sorted.get(middle)) / 2.0;
+        }
+        return sorted.get(middle);
+    }
+
+    private double calculateStdDev(List<Double> marks, double mean) {
+        return Math.sqrt(marks.stream()
+                .mapToDouble(mark -> Math.pow(mark - mean, 2))
+                .average()
+                .orElse(0.0));
+    }
+
+    private double calculatePassRate(List<Double> marks) {
+        int failMark = Integer.parseInt(FailMarks.getText());
+        long passCount = marks.stream().filter(mark -> mark >= failMark).count();
+        return (double) passCount / marks.size();
+    }
+
+    @FXML
+    private void exportAnalytics() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Export Analytics");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv")
+        );
+
+        File file = fileChooser.showSaveDialog(null);
+        if (file != null) {
+            try (PrintWriter writer = new PrintWriter(file)) {
+                // Write headers
+                writer.println("Student ID,Name,Marks,Grade");
+
+                // Write data
+                for (StudentEntry student : gradingTable.getItems()) {
+                    writer.printf("%s,%s,%s,%s%n",
+                            student.getStudentId(),
+                            student.getStudentName(),
+                            student.getMarks(),
+                            student.getGrade()
+                    );
+                }
+
+                // Write statistics
+                writer.println("\nClass Statistics");
+                writer.printf("Mean,%.2f%n", Double.parseDouble(meanLabel.getText()));
+                writer.printf("Median,%.2f%n", Double.parseDouble(medianLabel.getText()));
+                writer.printf("Standard Deviation,%.2f%n", Double.parseDouble(stdDevLabel.getText()));
+                writer.printf("Pass Rate,%.1f%%%n", Double.parseDouble(passRateLabel.getText().replace("%", "")));
+
+                showAlert(Alert.AlertType.INFORMATION, "Export Successful",
+                        null, "Analytics data has been exported successfully.");
+            } catch (IOException e) {
+                showAlert(Alert.AlertType.ERROR, "Export Failed",
+                        null, "Failed to export analytics data: " + e.getMessage());
+            }
+        }
+    }
+
+
 }

@@ -51,7 +51,7 @@ public class AddStudentsController {
 
         // Initialize the course combo box with data from the database
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/school", "root", "618K@PV4saad");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/school", "root", "Ibrahim@830");
         } catch (SQLException e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Database Connection Error", null, "Failed to connect to the database.");

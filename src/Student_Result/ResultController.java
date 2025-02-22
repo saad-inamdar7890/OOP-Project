@@ -64,7 +64,7 @@ public class ResultController {
 
     public void initialize() {
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/school", "root", "618K@PV4saad");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/school", "root", "Ibrahim@830");
         } catch (SQLException e) {
             e.printStackTrace();
         }
