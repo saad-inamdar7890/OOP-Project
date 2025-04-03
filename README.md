@@ -2,13 +2,7 @@
 Overview
 This JavaFX application manages courses, students, and grading. It connects to a MySQL database (school schema) to store and retrieve student records, course details, and grading results. The grading module provides different grading modes (Absolute, Relative, Normalised, etc.) and visualizes grade distribution through charts.  <hr></hr>
 <hr></hr>
-Project Structure
-`src/Course_Selection`: Contains controllers for course selection interactions.
-`src/Course_Selection/Add_Course`: Adds new courses associated with a professor.
-`src/Course_Selection/Add_Students`: Adds new students (via CSV) to a selected course.
-`src/Grading`: Contains controllers for grading logic and analytics (e.g., histograms, bar charts).
-`src/database.sql`: Creates and populates the database schema used by the application.
-<hr></hr>
+
 How to Run Locally
 Database Setup  
 Install MySQL and create the `school` schema.
